@@ -1,6 +1,7 @@
 package com.mikeriv.ssui_2016.a2_collage_basecode.tests;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,16 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.mikeriv.ssui_2016.a2_collage_basecode.R;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.CircleLayout;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.ColumnLayout;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.IconImage;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.NinePartImage;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.OvalClip;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.PileLayout;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.RowLayout;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.SimpleFrame;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.SolidBackDrop;
+import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.TextVisualElement;
 import com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement;
 import com.mikeriv.ssui_2016.a2_collage_basecode.views.CollageView;
 
@@ -33,7 +44,7 @@ public abstract class CollageViewTestHelper {
     private static final int sAPITestNumber = sMenuItemStartIndex;
 
     // TODO Increase if you add tests
-    private static final int sNumTestItems = 3;
+    private static final int sNumTestItems = 5;
 
     /**
      * Runs a test based on the associated menu item passed in
@@ -59,6 +70,7 @@ public abstract class CollageViewTestHelper {
         }
 
         int itemId = item.getItemId();
+        Log.d(Integer.toString(itemId), Integer.toString(itemId));
         switch (itemId) {
             case sAPITestNumber:
                 runAPITest1(collageView, context);
@@ -68,6 +80,12 @@ public abstract class CollageViewTestHelper {
                 break;
             case 3:
                 runTest3(collageView, context);
+                break;
+            case 4:
+                runTest4(collageView, context);
+                break;
+            case 5:
+                runTest5(collageView, context);
                 break;
             // TODO add more test cases
             default:
@@ -120,169 +138,212 @@ public abstract class CollageViewTestHelper {
         // SimpleFrame, SolidBackDrop, IconImage, NinePartImage, TextVisualElement
 
         Resources res = context.getResources();
-//        if(placeElementsAtOrigin){
-//            rootVisualElement.addChild(new SimpleFrame(0, 0, 100, 100));
-//            rootVisualElement.addChild(new SolidBackDrop(0, 0, 100, 100, Color.MAGENTA));
-//            rootVisualElement.addChild(new IconImage(0, 0, BitmapFactory.decodeResource(res, R.drawable.ic_noun_cat)));
-//            Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.bluebutton);
-//            NinePatch patches = new NinePatch(bitmap, bitmap.getNinePatchChunk(), null);
-//            rootVisualElement.addChild(new NinePartImage(0, 0, 40, 40, patches));
-//            rootVisualElement.addChild(new TextVisualElement(0, 0, TEST_TEXT, Typeface.DEFAULT_BOLD, 25f));
-//        }
-//        else{
-//            rootVisualElement.addChild(new SimpleFrame(10, 10, 40, 40));
-//            rootVisualElement.addChild(new SolidBackDrop(10, 60, 40, 40, Color.MAGENTA));
-//            rootVisualElement.addChild(new IconImage(10, 110, BitmapFactory.decodeResource(res, R.drawable.ic_noun_robot2)));
-//            Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.bluebutton);
-//            NinePatch patches = new NinePatch(bitmap, bitmap.getNinePatchChunk(), null);
-//            rootVisualElement.addChild(new NinePartImage(60, 10, 400, 40, patches));
-//            rootVisualElement.addChild(new TextVisualElement(60, 60, TEST_TEXT, Typeface.DEFAULT_BOLD, 25f));
-//        }
+        if(placeElementsAtOrigin){
+            rootVisualElement.addChild(new SimpleFrame(0, 0, 100, 100));
+            rootVisualElement.addChild(new SolidBackDrop(0, 0, 100, 100, Color.MAGENTA));
+            rootVisualElement.addChild(new IconImage(0, 0, BitmapFactory.decodeResource(res, R.drawable.ic_noun_cat)));
+            Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.bluebutton);
+            NinePatch patches = new NinePatch(bitmap, bitmap.getNinePatchChunk(), null);
+            rootVisualElement.addChild(new NinePartImage(0, 0, 40, 40, patches));
+            rootVisualElement.addChild(new TextVisualElement(0, 0, TEST_TEXT, Typeface.DEFAULT_BOLD, 25f));
+        }
+        else{
+            rootVisualElement.addChild(new SimpleFrame(10, 10, 40, 40));
+            rootVisualElement.addChild(new SolidBackDrop(10, 60, 40, 40, Color.MAGENTA));
+            rootVisualElement.addChild(new IconImage(10, 110, BitmapFactory.decodeResource(res, R.drawable.ic_noun_robot2)));
+            Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.bluebutton);
+            NinePatch patches = new NinePatch(bitmap, bitmap.getNinePatchChunk(), null);
+            rootVisualElement.addChild(new NinePartImage(60, 10, 400, 40, patches));
+            rootVisualElement.addChild(new TextVisualElement(60, 60, TEST_TEXT, Typeface.DEFAULT_BOLD, 25f));
+        }
     }
 
     private static final void runAPITest1(CollageView collageView, Context context) {
         // TODO uncomment when you have implemented SolidBackDrop
-//        SolidBackDrop rootVisualElement = new SolidBackDrop(0, 0, 1000, 1000, Color.WHITE);
-//        SolidBackDrop fakeChild = new SolidBackDrop(0, 0, 400, 800, Color.WHITE);
-//        int numTestsPassed = 0;
-//        int numTestsFailed = 0;
-//        Log.d(TAG, "Running API Tests #1");
-//        try{
-//            rootVisualElement.addChild(null);
-//            Log.d(TAG, "Add null child:PASS");
-//            numTestsPassed += 1;
-//        } catch (Exception e){
-//            Log.d(TAG, "Add null Child:FAIL");
-//            numTestsFailed += 1;
-//        }
-//
-//        try{
-//            if(rootVisualElement.getChildAt(-1) == null) {
-//                Log.d(TAG, "Get bad Child:PASS");
-//                numTestsPassed += 1;
-//            }
-//            else {
-//                Log.d(TAG, "Get bad Child:FAIL");
-//                numTestsFailed += 1;
-//            }
-//        } catch (Exception e){
-//            Log.d(TAG, "Get bad Child:FAIL");
-//            numTestsFailed += 1;
-//        }
-//
-//        try{
-//            if(rootVisualElement.findChild(fakeChild) == -1
-//                    && rootVisualElement.findChild(null) == -1) {
-//                Log.d(TAG, "Find bad Child:PASS");
-//                numTestsPassed += 1;
-//            } else {
-//                Log.d(TAG, "Find bad Child:FAIL");
-//                numTestsFailed += 1;
-//            }
-//        } catch (Exception e){
-//            Log.d(TAG, "Find bad Child:FAIL");
-//            numTestsFailed += 1;
-//        }
-//
-//
-//        try{
-//            rootVisualElement.moveChildLater(fakeChild);
-//            rootVisualElement.moveChildLater(null);
-//            Log.d(TAG, "Move bad Child:PASS");
-//            numTestsPassed += 1;
-//        } catch (Exception e){
-//            Log.d(TAG, "Move bad Child:FAIL");
-//            numTestsFailed += 1;
-//        }
-//
-//        try{
-//            SolidBackDrop s = new SolidBackDrop(0, 0, 100, 100, Color.GREEN);
-//            s.setPosition(null);
-//            s.setSize(null);
-//            Log.d(TAG, "Set position/size null:PASS");
-//            numTestsPassed += 1;
-//        } catch (Exception e){
-//            Log.d(TAG, "Set position/size null:FAIL");
-//            numTestsFailed += 1;
-//        }
-//        String outputText = String.format(
-//                "API Tests Passed: %d \n API Tests Failed: %d \n See Log for Details",
-//                numTestsPassed,
-//                numTestsFailed);
-//        Toast testToast = Toast.makeText(context, outputText, Toast.LENGTH_LONG);
-//        testToast.show();
+        SolidBackDrop rootVisualElement = new SolidBackDrop(0, 0, 1000, 1000, Color.WHITE);
+        SolidBackDrop fakeChild = new SolidBackDrop(0, 0, 400, 800, Color.WHITE);
+        int numTestsPassed = 0;
+        int numTestsFailed = 0;
+        Log.d(TAG, "Running API Tests #1");
+        try{
+            rootVisualElement.addChild(null);
+            Log.d(TAG, "Add null child:PASS");
+            numTestsPassed += 1;
+        } catch (Exception e){
+            Log.d(TAG, "Add null Child:FAIL");
+            numTestsFailed += 1;
+        }
+
+        try{
+            if(rootVisualElement.getChildAt(-1) == null) {
+                Log.d(TAG, "Get bad Child:PASS");
+                numTestsPassed += 1;
+            }
+            else {
+                Log.d(TAG, "Get bad Child:FAIL");
+                numTestsFailed += 1;
+            }
+        } catch (Exception e){
+            Log.d(TAG, "Get bad Child:FAIL");
+            numTestsFailed += 1;
+        }
+
+        try{
+            if(rootVisualElement.findChild(fakeChild) == -1
+                    && rootVisualElement.findChild(null) == -1) {
+                Log.d(TAG, "Find bad Child:PASS");
+                numTestsPassed += 1;
+            } else {
+                Log.d(TAG, "Find bad Child:FAIL");
+                numTestsFailed += 1;
+            }
+        } catch (Exception e){
+            Log.d(TAG, "Find bad Child:FAIL");
+            numTestsFailed += 1;
+        }
+
+
+        try{
+            rootVisualElement.moveChildLater(fakeChild);
+            rootVisualElement.moveChildLater(null);
+            Log.d(TAG, "Move bad Child:PASS");
+            numTestsPassed += 1;
+        } catch (Exception e){
+            Log.d(TAG, "Move bad Child:FAIL");
+            numTestsFailed += 1;
+        }
+
+        try{
+            SolidBackDrop s = new SolidBackDrop(0, 0, 100, 100, Color.GREEN);
+            s.setPosition(null);
+            s.setSize(null);
+            Log.d(TAG, "Set position/size null:PASS");
+            numTestsPassed += 1;
+        } catch (Exception e){
+            Log.d(TAG, "Set position/size null:FAIL");
+            numTestsFailed += 1;
+        }
+        String outputText = String.format(
+                "API Tests Passed: %d \n API Tests Failed: %d \n See Log for Details",
+                numTestsPassed,
+                numTestsFailed);
+        Toast testToast = Toast.makeText(context, outputText, Toast.LENGTH_LONG);
+        testToast.show();
     }
 
     private static final void runTest2(CollageView collageView, Context context) {
         Log.d(TAG, "Running test 2!");
-//        /**
-//         * TODO uncomment when you have implemented the following:
-//         * SolidBackDrop, PileLayout, RowLayout, ColumnLayout
-//         **/
-//        SolidBackDrop rootVisualElement = new SolidBackDrop(0, 0, 1000, 1000, Color.WHITE);
-//        putSamplesInElement(rootVisualElement, false, context);
-//        PileLayout p = new PileLayout(10, 400, 200, 200);
-//        p.addChild(new SolidBackDrop(0, 0, 900, 900, Color.YELLOW));
-//        p.addChild(new SimpleFrame(0, 0, 200, 200));
-//        rootVisualElement.addChild(p);
-//        putSamplesInElement(p, false, context);
-//        p.addChild(new SolidBackDrop(0, 0, 40, 40, Color.CYAN));
-//        RowLayout r = new RowLayout(10, 620, 700, 100);
-//        rootVisualElement.addChild(r);
-//        putSamplesInElement(r, false, context);
-//        ColumnLayout col = new ColumnLayout(10, 740, 100, 400);
-//        rootVisualElement.addChild(col);
-//        putSamplesInElement(col, false, context);
-//        updateCollageViewWithRoot(collageView, rootVisualElement);
+        /**
+         * TODO uncomment when you have implemented the following:
+         * SolidBackDrop, PileLayout, RowLayout, ColumnLayout
+         **/
+        SolidBackDrop rootVisualElement = new SolidBackDrop(0, 0, 1000, 1000, Color.WHITE);
+        putSamplesInElement(rootVisualElement, false, context);
+        PileLayout p = new PileLayout(10, 400, 200, 200);
+        p.addChild(new SolidBackDrop(0, 0, 900, 900, Color.YELLOW));
+        p.addChild(new SimpleFrame(0, 0, 200, 200));
+        rootVisualElement.addChild(p);
+        putSamplesInElement(p, false, context);
+        p.addChild(new SolidBackDrop(0, 0, 40, 40, Color.CYAN));
+        RowLayout r = new RowLayout(10, 620, 700, 100);
+        rootVisualElement.addChild(r);
+        putSamplesInElement(r, false, context);
+        ColumnLayout col = new ColumnLayout(10, 740, 100, 400);
+        rootVisualElement.addChild(col);
+        putSamplesInElement(col, false, context);
+        updateCollageViewWithRoot(collageView, rootVisualElement);
     }
 
 
     private static final void runTest3(CollageView collageView, Context context) {
         Log.d(TAG, "Running test 3!");
-//        /**
-//        * TODO uncomment when you have implemented the following:
-//        * SolidBackDrop, CircleLayout, OvalClip
-//        **/
-//        SolidBackDrop rootVisualElement = new SolidBackDrop(0, 0, 2000, 2000, Color.LTGRAY);
-//        SolidBackDrop s = new SolidBackDrop(0, 0, 100, 100, Color.GREEN);
-//        rootVisualElement.addChild(s);
-//        s.setPosition(-40, -40);
-//        SolidBackDrop s2 = new SolidBackDrop(0, 0, 100, 100, Color.BLUE);
-//        rootVisualElement.addChild(s2);
-//        SolidBackDrop s3 = new SolidBackDrop(0, 0, 100, 100, Color.RED);
-//        rootVisualElement.addChild(s3);
-//        rootVisualElement.moveChildLast(s);
-//        rootVisualElement.removeChild(s3);
-//
-//        CircleLayout c = new CircleLayout(500, 500, 500, 500, 200, 200, 100);
-//        rootVisualElement.addChild(c);
-//        for(int i = 0; i < 8; i++){
-//        c.addChild(new SolidBackDrop(0, 0, 20, 20, i % 2 == 1 ? Color.BLUE : Color.YELLOW));
-//        }
-//        SolidBackDrop s4 = new SolidBackDrop(0, 0, 50, 50, Color.MAGENTA);
-//        c.addChild(s4);
-//
-//        OvalClip o = new OvalClip(5, 300, 1000, 1080);
-//        o.addChild(new SolidBackDrop(0, 0, 1000, 1000, Color.GREEN));
-//        putSamplesInElement(o, true, context);
-//        rootVisualElement.addChild(o);
-//
-//        IconImage i = new IconImage(
-//                20,
-//                70,
-//                BitmapFactory.decodeResource(
-//                        context.getResources(),
-//                        R.drawable.ic_noun_whale));
-//        rootVisualElement.addChild(i);
-//
-//        updateCollageViewWithRoot(collageView, rootVisualElement);
+        /**
+        * TODO uncomment when you have implemented the following:
+        * SolidBackDrop, CircleLayout, OvalClip
+        **/
+        SolidBackDrop rootVisualElement = new SolidBackDrop(0, 0, 2000, 2000, Color.LTGRAY);
+        SolidBackDrop s = new SolidBackDrop(0, 0, 100, 100, Color.GREEN);
+        rootVisualElement.addChild(s);
+        s.setPosition(-40, -40);
+        SolidBackDrop s2 = new SolidBackDrop(0, 0, 100, 100, Color.BLUE);
+        rootVisualElement.addChild(s2);
+        SolidBackDrop s3 = new SolidBackDrop(0, 0, 100, 100, Color.RED);
+        rootVisualElement.addChild(s3);
+        rootVisualElement.moveChildLast(s);
+        rootVisualElement.removeChild(s3);
+
+        CircleLayout c = new CircleLayout(500, 500, 500, 500, 200, 200, 100);
+        rootVisualElement.addChild(c);
+        for(int i = 0; i < 8; i++){
+        c.addChild(new SolidBackDrop(0, 0, 20, 20, i % 2 == 1 ? Color.BLUE : Color.YELLOW));
+        }
+        SolidBackDrop s4 = new SolidBackDrop(0, 0, 50, 50, Color.MAGENTA);
+        c.addChild(s4);
+
+        OvalClip o = new OvalClip(5, 300, 1000, 1080);
+        o.addChild(new SolidBackDrop(0, 0, 1000, 1000, Color.GREEN));
+        putSamplesInElement(o, true, context);
+        rootVisualElement.addChild(o);
+
+        IconImage i = new IconImage(
+                20,
+                70,
+                BitmapFactory.decodeResource(
+                        context.getResources(),
+                        R.drawable.ic_noun_whale));
+        rootVisualElement.addChild(i);
+
+        updateCollageViewWithRoot(collageView, rootVisualElement);
 
     }
 
     // TODO add more test cases below, if necessary
-//    private static final void runTest4(CollageView collageView, Context context)
-//        Log.d(TAG, "running test 3!");
-//        updateCollageViewWithRoot(collageView, o);
-//    }
+    private static final void runTest4(CollageView collageView, Context context){
+        Log.d(TAG, "running test 4!");
+        SolidBackDrop rootVisualElement = new SolidBackDrop(0, 0, 2000, 2000, Color.LTGRAY);
+        rootVisualElement.addChild(new TextVisualElement(0,0,"Pythoning", Typeface.DEFAULT_BOLD, 25f));
+        CircleLayout c = new CircleLayout(0, 0, 1000, 1000, 500, 500, 300);
+        rootVisualElement.addChild(c);
+        for(int i = 0; i < 100; i++){
+            c.addChild(new SolidBackDrop(0, 0, 20, 20, i % 2 == 1 ? Color.BLUE : Color.YELLOW));
+            //c.addChild(new TextVisualElement(0, 0, TEST_TEXT, Typeface.DEFAULT_BOLD, 25f));
+            c.addChild(null);
+        }
+        c.addChild(new SolidBackDrop(0, 0, 20, 20, Color.YELLOW));
+        updateCollageViewWithRoot(collageView, rootVisualElement);
+    }
+
+    private static final void runTest5(CollageView collageView, Context context){
+        Log.d(TAG, "running test 5!");
+        SolidBackDrop rootVisualElement = new SolidBackDrop(0, 0, 2000, 2000, Color.LTGRAY);
+        SolidBackDrop s = new SolidBackDrop(0, 0, 100, 100, Color.GREEN);
+        rootVisualElement.addChild(s);
+
+        SolidBackDrop s2 = new SolidBackDrop(0, 0, 100, 100, Color.BLUE);
+        s2.setPosition(40, 40);
+        rootVisualElement.addChild(s2);
+        SolidBackDrop s3 = new SolidBackDrop(0, 0, 100, 100, Color.RED);
+        s3.setPosition(80,80);
+        rootVisualElement.addChild(s3);
+        SimpleFrame framesimple = new SimpleFrame(0,0,50,50);
+        s3.addChild(framesimple);
+
+        rootVisualElement.moveChildEarlier(rootVisualElement.getChildAt(1)); // BGR
+        rootVisualElement.moveChildEarlier(rootVisualElement.getChildAt(2)); // BRG
+        rootVisualElement.moveChildLast(rootVisualElement.getChildAt(0)); // RGB
+        rootVisualElement.moveChildLast(rootVisualElement.getChildAt(1)); // RBG
+        rootVisualElement.moveChildFirst(rootVisualElement.getChildAt(2)); // GRB
+        rootVisualElement.moveChildLater(rootVisualElement.getChildAt(2)); // GRB
+        rootVisualElement.moveChildLater(rootVisualElement.getChildAt(1)); // GBR
+        rootVisualElement.moveChildLater(rootVisualElement.getChildAt(2)); // GBR
+        rootVisualElement.removeChild(rootVisualElement.getChildAt(0)); // BR
+        rootVisualElement.removeChild(rootVisualElement.getChildAt(2)); // BR
+        rootVisualElement.addChild(s); // BRG
+        rootVisualElement.addChild(framesimple); // BRGF
+        rootVisualElement.moveChildLater(rootVisualElement.getChildAt(1)); // BGRF
+
+
+        updateCollageViewWithRoot(collageView, rootVisualElement);
+    }
 
 }

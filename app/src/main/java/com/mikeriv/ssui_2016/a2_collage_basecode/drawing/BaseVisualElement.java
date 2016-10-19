@@ -5,6 +5,7 @@ package com.mikeriv.ssui_2016.a2_collage_basecode.drawing;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * @author Michael Rivera (modified 10/16/2016)
  *
  */
-public abstract class BaseVisualElement extends PrebaseVisualElement {
+public class BaseVisualElement extends PrebaseVisualElement {
 
 	float mPosX;
 	float mPosY;
@@ -120,7 +121,10 @@ public abstract class BaseVisualElement extends PrebaseVisualElement {
 	 */
 	@Override
 	public void setW(float w){
-		this.mWidth = w;
+
+		// Ignore external calls to set size if intrinsic
+		if (!this.sizeIsIntrinsic())
+			this.mWidth = w;
 	}
 
 	/* (non-Javadoc)
@@ -128,7 +132,10 @@ public abstract class BaseVisualElement extends PrebaseVisualElement {
 	 */
 	@Override
 	public void setH(float h){
-		this.mHeight = h;
+
+		// Ignore external calls to set size if intrinsic
+		if (!this.sizeIsIntrinsic())
+			this.mHeight = h;
 	}
 
 	/* (non-Javadoc)
@@ -184,6 +191,9 @@ public abstract class BaseVisualElement extends PrebaseVisualElement {
 	 */
 	@Override
 	public VisualElement getChildAt(int index){
+		if (index < 0 || index >= this.mChildrenList.size()){
+			return null;
+		}
 		return this.mChildrenList.get(index);
 	}
 
@@ -192,6 +202,9 @@ public abstract class BaseVisualElement extends PrebaseVisualElement {
 	 */
 	@Override
 	public int findChild(VisualElement child){
+		if (child == null){
+			return -1;
+		}
 		return this.mChildrenList.indexOf(child);
 	}
 
@@ -199,59 +212,134 @@ public abstract class BaseVisualElement extends PrebaseVisualElement {
 	 * @see com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement#addChild(com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement)
 	 */
 	@Override
-	abstract public void addChild(VisualElement child);
+	public void addChild(VisualElement child){
+
+		// Don't add null children
+		if (child != null) {
+
+			// First remove the child from its existing parent
+			if (child.getParent() != null){
+				child.getParent().removeChild(child);
+			}
+			this.mChildrenList.add(child);
+			child.setParent(this);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement#removeChildAt(int)
 	 */
 	@Override
 	public void removeChildAt(int index){
-		//does this need to be .removeAll?
-		//will there ever be the same child twice in my heiarchy tree?
+		if (index > -1 && index < this.mChildrenList.size()) {
+			this.mChildrenList.get(index).setParent(null);
+			this.mChildrenList.remove(index);
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement#removeChild(com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement)
 	 */
 	@Override
-	abstract public void removeChild(VisualElement child);
+	public void removeChild(VisualElement child){
+
+		if (this.mChildrenList.contains(child)) {
+			child.setParent(null);
+			this.mChildrenList.remove(child);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement#moveChildFirst(com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement)
 	 */
 	@Override
-	abstract public void moveChildFirst(VisualElement child);
+	public void moveChildFirst(VisualElement child){
+
+		// Under the assumption that this method is only called after child has been inserted
+		// To move child to front, remove it from list first and then re-insert to front
+		if(this.mChildrenList.contains(child)){
+			this.mChildrenList.remove(child);
+			this.mChildrenList.add(0,child);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement#moveChildLast(com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement)
 	 */
 	@Override
-	abstract public void moveChildLast(VisualElement child);
+	public void moveChildLast(VisualElement child){
+
+		// Under the assumption that this method is only called after child has been inserted
+		// To move child to end, remove it from list first and then re-insert to back
+		if(this.mChildrenList.contains(child)){
+			this.mChildrenList.remove(child);
+			this.mChildrenList.add(child);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement#moveChildEarlier(com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement)
 	 */
 	@Override
-	abstract public void moveChildEarlier(VisualElement child);
+	public void moveChildEarlier(VisualElement child){
+
+		if (this.mChildrenList.contains(child)){
+			int childStartingIndex = this.mChildrenList.indexOf(child);
+			if (childStartingIndex > 0){
+				this.mChildrenList.remove(child);
+				this.mChildrenList.add(childStartingIndex-1,child);
+			}
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement#moveChildLater(com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement)
 	 */
 	@Override
-	abstract public void moveChildLater(VisualElement child);
+	public void moveChildLater(VisualElement child){
+
+		if (this.mChildrenList.contains(child)){
+			int childStartingIndex = this.mChildrenList.indexOf(child);
+			int childListSize = this.mChildrenList.size();
+			if (childStartingIndex < childListSize - 1){
+				this.mChildrenList.remove(child);
+				this.mChildrenList.add(childStartingIndex+1,child);
+			}
+		}
+	}
 
 
 	/* (non-Javadoc)
 	 * @see com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement#doLayout()
 	 */
 	@Override
-	abstract public void doLayout();
+	public void doLayout(){
+		if (!this.mChildrenList.isEmpty()){
+			for (int i = 0; i < this.mChildrenList.size(); i++){
+				this.mChildrenList.get(i).doLayout();
+			}
+		}
+
+	}
 
 	/* (non-Javadoc)
 	 * @see com.mikeriv.ssui_2016.a2_collage_basecode.drawing.VisualElement#draw(android.graphics.Canvas)
 	 */
 	@Override
-	abstract public void draw(Canvas onCanvas);
+	public void draw(Canvas onCanvas){
+
+		onCanvas.save();
+		onCanvas.clipRect(this.mPosX,this.mPosY,this.mPosX+this.mWidth,this.mPosY+this.mHeight);
+		onCanvas.translate(this.mPosX,this.mPosY);
+
+		if (!this.mChildrenList.isEmpty()){
+			for (int i = 0; i < this.mChildrenList.size(); i++){
+				this.mChildrenList.get(i).draw(onCanvas);
+			}
+		}
+
+		onCanvas.restore();
+	}
 
 	/**
 	 * Default constructor.

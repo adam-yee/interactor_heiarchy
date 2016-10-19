@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">A2 Collage BaseCode</string>
     <string name="title_activity_collage">Collage</string>
+    <string name="overwatch">Reporting for Duty!</string>
+    <string name="phara">Overwatch Profile: Pharah</string>
 </resources>
